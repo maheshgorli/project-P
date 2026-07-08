@@ -23,4 +23,14 @@ app.include_router(satellite_router)
 
 @app.get("/")
 def home():
-    return {"message": "working"}
+    return {
+        "message": "Geo Satellite Tracking Platform API is running",
+        "endpoints": {
+            "health_check": "/",
+            "nasa_all_events_status": "/satellite",
+            "wildfires": "/wildfires",
+            "storms": "/storms",
+            "sentinel_auth_test": "/sentinel-test",
+            "satellite_image": "/satellite-image?latitude=<float>&longitude=<float>",
+        },
+    }
