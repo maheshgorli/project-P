@@ -16,3 +16,6 @@ pillow
 
 motor
 pymongo
+
+sentinelhub
+matplotlib
