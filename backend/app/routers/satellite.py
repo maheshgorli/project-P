@@ -1,7 +1,17 @@
 from fastapi import APIRouter
 import requests
-from backend.app.services.sentinel_service import get_config
-from backend.app.services.image_service import fetch_satellite_image, DEFAULT_LATITUDE, DEFAULT_LONGITUDE
+
+try:
+    from backend.app.services.sentinel_service import get_config
+    from backend.app.services.image_service import (
+        fetch_satellite_image,
+        DEFAULT_LATITUDE,
+        DEFAULT_LONGITUDE,
+    )
+    SENTINEL_AVAILABLE = True
+except ImportError as e:
+    SENTINEL_AVAILABLE = False
+    _SENTINEL_IMPORT_ERROR = str(e)
 
 router = APIRouter()
 
@@ -44,6 +54,11 @@ def satellite():
 
 @router.get("/sentinel-test")
 def sentinel_test():
+    if not SENTINEL_AVAILABLE:
+        return {
+            "authenticated": False,
+            "error": f"Sentinel Hub dependencies not installed: {_SENTINEL_IMPORT_ERROR}",
+        }
     try:
         config = get_config()
     except ValueError as e:
@@ -56,9 +71,14 @@ def sentinel_test():
 
 @router.get("/satellite-image")
 def satellite_image(
-    latitude: float = DEFAULT_LATITUDE,
-    longitude: float = DEFAULT_LONGITUDE,
+    latitude: float = 17.3850,
+    longitude: float = 78.4867,
 ):
+    if not SENTINEL_AVAILABLE:
+        return {
+            "success": False,
+            "error": f"Sentinel Hub dependencies not installed: {_SENTINEL_IMPORT_ERROR}",
+        }
     try:
         image_path = fetch_satellite_image(latitude, longitude)
     except RuntimeError as e:

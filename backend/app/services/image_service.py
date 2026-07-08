@@ -1,3 +1,5 @@
+import os
+
 # Sentinel Hub image download service.
 # To be implemented in Phase 6.
 
@@ -6,7 +8,6 @@
 DEFAULT_LATITUDE = 17.3850
 DEFAULT_LONGITUDE = 78.4867
 
-import os
 from PIL import Image
 import numpy as np
 from sentinelhub import (
@@ -98,7 +99,10 @@ def fetch_satellite_image(
         raise RuntimeError("Sentinel Hub returned no image data.")
 
     # Ensure output directory exists
-    images_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "images")
+    images_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+        "images",
+    )
     os.makedirs(images_dir, exist_ok=True)
 
     filename = f"sentinel_{latitude}_{longitude}.png"
