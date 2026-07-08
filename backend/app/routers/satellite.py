@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 import requests
+from backend.app.services.sentinel_service import get_config
 
 router = APIRouter()
 
@@ -37,6 +38,18 @@ def satellite():
 
     return {
         "status": response.status_code
+    }
+
+
+@router.get("/sentinel-test")
+def sentinel_test():
+    try:
+        config = get_config()
+    except ValueError as e:
+        return {"authenticated": False, "error": str(e)}
+    return {
+        "authenticated": True,
+        "client_id": config.sh_client_id[:10] + "...",
     }
 
 
