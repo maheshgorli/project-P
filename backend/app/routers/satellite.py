@@ -88,6 +88,7 @@ def satellite_image(
         "latitude": latitude,
         "longitude": longitude,
         "image_path": image_path,
+        "image_url": f"http://127.0.0.1:8000/{image_path}",
     }
 
 
