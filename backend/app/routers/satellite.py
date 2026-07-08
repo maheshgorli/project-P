@@ -35,7 +35,7 @@ def get_wildfires():
                     "category": category.get("title"),
                     "coordinates": event.get("geometry", [{}])[0].get("coordinates")
                 })
-+
+
     return wildfires
 
 
