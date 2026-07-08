@@ -44,7 +44,7 @@ def fetch_satellite_image(
     latitude: float = DEFAULT_LATITUDE,
     longitude: float = DEFAULT_LONGITUDE,
     bbox_size: float = 0.05,
-) -> str:
+) -> dict:
     """
     Fetch a true-color Sentinel-2 L1C image centred on (latitude, longitude).
 
@@ -54,7 +54,7 @@ def fetch_satellite_image(
         bbox_size: Half-width/height of the bounding box in degrees (default 0.05).
 
     Returns:
-        Relative file path of the saved PNG, e.g. "images/sentinel_17.385_78.4867.png".
+        Dict with image_path, metadata (bbox, resolution, size, etc.), and file_size_bytes.
 
     Raises:
         RuntimeError: If the Sentinel Hub request fails for any reason.
@@ -115,4 +115,20 @@ def fetch_satellite_image(
 
     Image.fromarray(arr).save(full_path)
 
-    return f"images/{filename}"
+    return {
+        "image_path": f"images/{filename}",
+        "filename": filename,
+        "latitude": latitude,
+        "longitude": longitude,
+        "bbox": [
+            longitude - bbox_size,
+            latitude - bbox_size,
+            longitude + bbox_size,
+            latitude + bbox_size,
+        ],
+        "resolution_meters": resolution,
+        "image_size_pixels": {"width": size[0], "height": size[1]},
+        "time_interval": ["2024-01-01", "2024-06-30"],
+        "data_collection": "SENTINEL2_L1C",
+        "file_size_bytes": os.path.getsize(full_path),
+    }

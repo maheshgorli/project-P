@@ -80,15 +80,13 @@ def satellite_image(
             "error": f"Sentinel Hub dependencies not installed: {_SENTINEL_IMPORT_ERROR}",
         }
     try:
-        image_path = fetch_satellite_image(latitude, longitude)
+        details = fetch_satellite_image(latitude, longitude)
     except RuntimeError as e:
         return {"success": False, "error": str(e)}
     return {
         "success": True,
-        "latitude": latitude,
-        "longitude": longitude,
-        "image_path": image_path,
-        "image_url": f"http://127.0.0.1:8000/{image_path}",
+        "image_url": f"http://127.0.0.1:8000/{details['image_path']}",
+        **details,
     }
 
 
