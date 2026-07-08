@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 import requests
 from backend.app.services.sentinel_service import get_config
+from backend.app.services.image_service import fetch_satellite_image, DEFAULT_LATITUDE, DEFAULT_LONGITUDE
 
 router = APIRouter()
 
@@ -50,6 +51,23 @@ def sentinel_test():
     return {
         "authenticated": True,
         "client_id": config.sh_client_id[:10] + "...",
+    }
+
+
+@router.get("/satellite-image")
+def satellite_image(
+    latitude: float = DEFAULT_LATITUDE,
+    longitude: float = DEFAULT_LONGITUDE,
+):
+    try:
+        image_path = fetch_satellite_image(latitude, longitude)
+    except RuntimeError as e:
+        return {"success": False, "error": str(e)}
+    return {
+        "success": True,
+        "latitude": latitude,
+        "longitude": longitude,
+        "image_path": image_path,
     }
 
 

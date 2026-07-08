@@ -1,3 +1,4 @@
+backend/images/
 node_modules/
 __pycache__/
 *.pyc
