@@ -11,9 +11,13 @@ GET /satellite-image    — download a single image by lat/lon
 GET /sentinel-test      — OAuth credential smoke-test
 """
 
+import logging
 from datetime import datetime
 from fastapi import APIRouter
 import requests
+
+from app.config import settings
+from app.services.nasa_service import get_nasa_key
 
 try:
     from app.services.sentinel_service import get_config
@@ -27,9 +31,8 @@ except ImportError as e:
     SENTINEL_AVAILABLE = False
     _SENTINEL_IMPORT_ERROR = str(e)
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
-
-NASA_URL = "https://eonet.gsfc.nasa.gov/api/v3/events"
 
 
 # ---------------------------------------------------------------------------
@@ -38,11 +41,12 @@ NASA_URL = "https://eonet.gsfc.nasa.gov/api/v3/events"
 
 def _fetch_events_by_category(category_id: str) -> list:
     """Fetch EONET events filtered by category_id. Returns [] on any failure."""
+    params = {"api_key": get_nasa_key()}
     try:
-        response = requests.get(NASA_URL, timeout=10)
+        response = requests.get(settings.NASA_EONET_URL, params=params, timeout=10)
         response.raise_for_status()
     except requests.RequestException as e:
-        print(f"[satellite] Failed to fetch NASA EONET data: {e}")
+        logger.error("Failed to fetch NASA EONET data: %s", e)
         return []
 
     data = response.json()
@@ -68,7 +72,8 @@ def _fetch_events_by_category(category_id: str) -> list:
 
 @router.get("/satellite")
 def satellite():
-    response = requests.get(NASA_URL, timeout=10)
+    params = {"api_key": get_nasa_key()}
+    response = requests.get(settings.NASA_EONET_URL, params=params, timeout=10)
     return {"status": response.status_code}
 
 
@@ -153,7 +158,7 @@ def sentinel_test():
         }
     try:
         config = get_config()
-    except ValueError as e:
+    except (ValueError, EnvironmentError) as e:
         return {"authenticated": False, "error": str(e)}
     return {
         "authenticated": True,

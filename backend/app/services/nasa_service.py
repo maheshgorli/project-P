@@ -1,22 +1,15 @@
-import os
-from dotenv import load_dotenv
+"""
+NASA API key accessor.
 
-env_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-    ".env"
-)
+NASA_API_KEY is optional — EONET's public endpoints accept the shared DEMO_KEY
+for development and low-traffic usage (capped at 30 req/hr, 50 req/day).
+Set a real key in backend/.env for production use.  Get one free at:
+https://api.nasa.gov/
+"""
 
-load_dotenv(env_path)
+from app.config import settings
 
-# TODO: wire this into satellite.py requests once NASA API key auth is needed (see Phase 4).
-def get_nasa_key():
-    """
-    Returns the NASA API key from the environment.
 
-    NASA_API_KEY is optional for EONET's public endpoints — DEMO_KEY works fine
-    for development and low-traffic use. A real key is required for production to
-    avoid rate-limit errors (DEMO_KEY is capped at 30 req/hour, 50 req/day).
-
-    Get a free key at: https://api.nasa.gov/
-    """
-    return os.getenv("NASA_API_KEY", "DEMO_KEY")
+def get_nasa_key() -> str:
+    """Return the NASA API key (falls back to 'DEMO_KEY' if unset)."""
+    return settings.nasa_api_key
