@@ -18,7 +18,14 @@ from sentinelhub import (
     SentinelHubRequest,
     bbox_to_dimensions,
 )
-from backend.app.services.sentinel_service import get_config
+from app.services.sentinel_service import get_config, _CDSE_BASE_URL
+
+# DataCollection.SENTINEL2_L1C has service_url hard-coded to services.sentinel-hub.com.
+# Re-define it pointing at the CDSE base URL so requests are routed correctly.
+_SENTINEL2_L1C_CDSE = DataCollection.SENTINEL2_L1C.define_from(
+    "SENTINEL2_L1C_CDSE",
+    service_url=_CDSE_BASE_URL,
+)
 
 # True-color evalscript (Sentinel Hub standard B04/B03/B02 RGB)
 _EVALSCRIPT_TRUE_COLOR = """
@@ -79,7 +86,7 @@ def fetch_satellite_image(
             evalscript=_EVALSCRIPT_TRUE_COLOR,
             input_data=[
                 SentinelHubRequest.input_data(
-                    data_collection=DataCollection.SENTINEL2_L1C,
+                    data_collection=_SENTINEL2_L1C_CDSE,
                     time_interval=("2024-01-01", "2024-06-30"),
                     mosaicking_order="leastCC",
                 )

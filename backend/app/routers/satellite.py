@@ -2,8 +2,8 @@ from fastapi import APIRouter
 import requests
 
 try:
-    from backend.app.services.sentinel_service import get_config
-    from backend.app.services.image_service import (
+    from app.services.sentinel_service import get_config
+    from app.services.image_service import (
         fetch_satellite_image,
         DEFAULT_LATITUDE,
         DEFAULT_LONGITUDE,
