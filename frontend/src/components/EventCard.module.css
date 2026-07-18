@@ -1,0 +1,62 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.wildfire { border-left: 3px solid var(--fire);  }
+.storm    { border-left: 3px solid var(--storm); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.title {
+  font-size: 15px;
+  color: var(--text-h);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.meta { margin: 0; padding: 0; }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.row dt {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.row dd {
+  margin: 0;
+  color: var(--text-h);
+  text-align: right;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}

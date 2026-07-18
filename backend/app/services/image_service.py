@@ -51,14 +51,17 @@ def fetch_satellite_image(
     latitude: float = DEFAULT_LATITUDE,
     longitude: float = DEFAULT_LONGITUDE,
     bbox_size: float = 0.05,
+    output_filename: str | None = None,
 ) -> dict:
     """
     Fetch a true-color Sentinel-2 L1C image centred on (latitude, longitude).
 
     Args:
-        latitude:  Centre latitude in decimal degrees.
-        longitude: Centre longitude in decimal degrees.
-        bbox_size: Half-width/height of the bounding box in degrees (default 0.05).
+        latitude:         Centre latitude in decimal degrees.
+        longitude:        Centre longitude in decimal degrees.
+        bbox_size:        Half-width/height of the bounding box in degrees (default 0.05).
+        output_filename:  Override the saved filename (including .png extension).
+                          Defaults to sentinel_{lat}_{lon}.png.
 
     Returns:
         Dict with image_path, metadata (bbox, resolution, size, etc.), and file_size_bytes.
@@ -112,7 +115,7 @@ def fetch_satellite_image(
     )
     os.makedirs(images_dir, exist_ok=True)
 
-    filename = f"sentinel_{latitude}_{longitude}.png"
+    filename = output_filename or f"sentinel_{latitude}_{longitude}.png"
     full_path = os.path.join(images_dir, filename)
 
     # images[0] is a numpy array with shape (H, W, 3), values 0–1 float
